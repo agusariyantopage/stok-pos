@@ -13,19 +13,7 @@
                  <p>Penjualan</p>
 
                </a>
-             </li>
-             <li class="nav-item">
-               <a href="index.php?p=jurnal-tambah-biaya" class="nav-link">
-                 <i class="fas fa-hand-holding-usd nav-icon"></i>
-                 <p>Pengeluaran Kas</p>
-               </a>
-             </li>
-             <li class="nav-item">
-               <a href="index.php?p=jurnal-tambah-biayatransfer" class="nav-link">
-                 <i class="fas fa-exchange-alt nav-icon"></i>
-                 <p>Pengeluaran Transfer</p>
-               </a>
-             </li>
+             </li>            
            </ul>
          </li>
 

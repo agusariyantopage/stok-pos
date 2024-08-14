@@ -47,7 +47,7 @@ if (!empty($_POST)) {
         }
 
         $sql = "insert into jual (id_anggota, id_user, id_akun, keterangan_non_tunai, tanggal_transaksi, total, diskon, pajak, terbayar,status_bayar, dibuat_pada, diubah_pada) values($id_anggota,$id_user,$id_akun, '$keterangan_non_tunai','$tanggal_transaksi',$total,$diskon,$pajak,$terbayar,'$status_bayar',DEFAULT,DEFAULT)";
-        echo $sql;
+        // echo $sql;
         mysqli_query($koneksi, $sql);
 
 

@@ -50,25 +50,25 @@
   $total_piutang = $data6['total_piutang'];
 
   // Pendapatan Hari Ini
-  $hari_ini=date("Y-m-d");
-  $sql_pendapatan_hari_ini="SELECT COALESCE(SUM(total-diskon+pajak),0) AS total_pendapatan_hari_ini FROM jual WHERE tanggal_transaksi='$hari_ini'";
-  $query_pendapatan_hari_ini=mysqli_query($koneksi,$sql_pendapatan_hari_ini);
-  $data_pendapatan_hari_ini=mysqli_fetch_array($query_pendapatan_hari_ini);
-  $total_pendapatan_hari_ini=$data_pendapatan_hari_ini['total_pendapatan_hari_ini'];
+  $hari_ini = date("Y-m-d");
+  $sql_pendapatan_hari_ini = "SELECT COALESCE(SUM(total-diskon+pajak),0) AS total_pendapatan_hari_ini FROM jual WHERE tanggal_transaksi='$hari_ini'";
+  $query_pendapatan_hari_ini = mysqli_query($koneksi, $sql_pendapatan_hari_ini);
+  $data_pendapatan_hari_ini = mysqli_fetch_array($query_pendapatan_hari_ini);
+  $total_pendapatan_hari_ini = $data_pendapatan_hari_ini['total_pendapatan_hari_ini'];
 
-  $sql_pendapatan_hari_ini="SELECT SUM(IF(id_akun=5,jumlah,0)) AS total_bca_hari_ini,SUM(IF(id_akun=3,jumlah,0)) AS total_kas_hari_ini FROM jual_pembayaran WHERE tanggal_transaksi='$hari_ini'";
-  $query_pendapatan_hari_ini=mysqli_query($koneksi,$sql_pendapatan_hari_ini);
-  $data_hari_ini=mysqli_fetch_array($query_pendapatan_hari_ini);
-  $total_kas_hari_ini=$data_hari_ini['total_kas_hari_ini'];
-  $total_bca_hari_ini=$data_hari_ini['total_bca_hari_ini'];
+  $sql_pendapatan_hari_ini = "SELECT SUM(IF(id_akun=5,jumlah,0)) AS total_bca_hari_ini,SUM(IF(id_akun=3,jumlah,0)) AS total_kas_hari_ini FROM jual_pembayaran WHERE tanggal_transaksi='$hari_ini'";
+  $query_pendapatan_hari_ini = mysqli_query($koneksi, $sql_pendapatan_hari_ini);
+  $data_hari_ini = mysqli_fetch_array($query_pendapatan_hari_ini);
+  $total_kas_hari_ini = $data_hari_ini['total_kas_hari_ini'];
+  $total_bca_hari_ini = $data_hari_ini['total_bca_hari_ini'];
 
   // Biaya Hari Ini
-  $sql_biaya_hari_ini="SELECT SUM(IF((SELECT id_akun FROM akun_mutasi WHERE a.id_akun_jurnal=akun_mutasi.id_akun_jurnal AND a.id_akun!=akun_mutasi.id_akun)=3,a.debet-a.kredit,0)) AS total_pengeluaran_kas,SUM(IF((SELECT id_akun FROM akun_mutasi WHERE a.id_akun_jurnal=akun_mutasi.id_akun_jurnal AND a.id_akun!=akun_mutasi.id_akun)=5,a.debet-a.kredit,0)) AS total_pengeluaran_transfer from akun_mutasi a,akun_jurnal,akun where a.id_akun_jurnal=akun_jurnal.id_akun_jurnal and a.id_akun=akun.id_akun and akun.akun LIKE '%Biaya%' AND tanggal_transaksi='$hari_ini'";
-  $query_biaya_hari_ini=mysqli_query($koneksi,$sql_biaya_hari_ini);
-  $data_biaya_hari_ini=mysqli_fetch_array($query_biaya_hari_ini);
-  $total_pengeluaran_kas=$data_biaya_hari_ini['total_pengeluaran_kas'];
-  $total_pengeluaran_transfer=$data_biaya_hari_ini['total_pengeluaran_transfer'];
-  
+  $sql_biaya_hari_ini = "SELECT SUM(IF((SELECT id_akun FROM akun_mutasi WHERE a.id_akun_jurnal=akun_mutasi.id_akun_jurnal AND a.id_akun!=akun_mutasi.id_akun)=3,a.debet-a.kredit,0)) AS total_pengeluaran_kas,SUM(IF((SELECT id_akun FROM akun_mutasi WHERE a.id_akun_jurnal=akun_mutasi.id_akun_jurnal AND a.id_akun!=akun_mutasi.id_akun)=5,a.debet-a.kredit,0)) AS total_pengeluaran_transfer from akun_mutasi a,akun_jurnal,akun where a.id_akun_jurnal=akun_jurnal.id_akun_jurnal and a.id_akun=akun.id_akun and akun.akun LIKE '%Biaya%' AND tanggal_transaksi='$hari_ini'";
+  $query_biaya_hari_ini = mysqli_query($koneksi, $sql_biaya_hari_ini);
+  $data_biaya_hari_ini = mysqli_fetch_array($query_biaya_hari_ini);
+  $total_pengeluaran_kas = $data_biaya_hari_ini['total_pengeluaran_kas'];
+  $total_pengeluaran_transfer = $data_biaya_hari_ini['total_pengeluaran_transfer'];
+
   // SELECT akun_jurnal.id_akun_jurnal,a.id_akun,tanggal_transaksi,deskripsi,a.debet-a.kredit as total_transaksi,(SELECT id_akun FROM akun_mutasi WHERE a.id_akun_jurnal=akun_mutasi.id_akun_jurnal AND a.id_akun!=akun_mutasi.id_akun) AS total_pengeluaran_kas from akun_mutasi a,akun_jurnal,akun where a.id_akun_jurnal=akun_jurnal.id_akun_jurnal and a.id_akun=akun.id_akun and akun.akun LIKE '%Biaya%'
 
 
@@ -147,9 +147,9 @@
            <!-- small box -->
            <div class="small-box bg-danger">
              <div class="inner">
-               <h4><?= number_format($jumlah_pemasok); ?></h4>
+               <h4><?= number_format($jumlah_produk); ?></h4>
 
-               <p>Pemasok Terdaftar</p>
+               <p>Produk Toko</p>
              </div>
              <div class="icon">
                <i class="fas fa-address-card"></i>
@@ -160,15 +160,16 @@
          <!-- ./col -->
        </div>
        <!-- /.row -->
+       <?php if ($_SESSION['backend_level'] == 1) { ?>
        <!-- Small boxes (Stat box) -->
        <div class="row">
          <div class="col-lg-3 col-6">
            <!-- small box -->
            <div class="small-box bg-info">
              <div class="inner">
-               <h4><?= number_format($jumlah_produk); ?></h4>
+               <h4><?= number_format($jumlah_pemasok); ?></h4>
 
-               <p>Produk Toko</p>
+               <p>Pemasok Terdaftar</p>
              </div>
              <div class="icon">
                <i class="fas fa-tags"></i>
@@ -224,6 +225,7 @@
          <!-- ./col -->
        </div>
        <!-- /.row -->
+        <?php } ?>
 
        <div class="row">
          <div class="col-md-6">
@@ -252,10 +254,12 @@
                </div>
                <div class="row">
                  <div class="col-md-6">Pendapatan Piutang</div>
-                 <div class="col-md-6 text-right">Rp. <?= number_format($total_pendapatan_hari_ini-$total_kas_hari_ini-$total_bca_hari_ini); ?></div>
+                 <div class="col-md-6 text-right">Rp. <?= number_format($total_pendapatan_hari_ini - $total_kas_hari_ini - $total_bca_hari_ini); ?></div>
                </div>
                <div class="row">
-                 <div class="col-md-12"><hr></div>                 
+                 <div class="col-md-12">
+                   <hr>
+                 </div>
                </div>
                <div class="row">
                  <div class="col-md-6">Total Pendapatan</div>
@@ -264,47 +268,50 @@
              </div>
            </div>
          </div>
+         <?php if ($_SESSION['backend_level'] == 1) { ?>
+           <div class="col-md-6">
+             <!-- BAR CHART -->
+             <div class="card card-danger">
+               <div class="card-header">
+                 <h3 class="card-title">Pengeluaran Hari Ini</h3>
 
-         <div class="col-md-6">
-           <!-- BAR CHART -->
-           <div class="card card-danger">
-             <div class="card-header">
-               <h3 class="card-title">Pengeluaran Hari Ini</h3>
-
-               <div class="card-tools">
-                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                   <i class="fas fa-minus"></i>
-                 </button>
-                 <button type="button" class="btn btn-tool" data-card-widget="remove">
-                   <i class="fas fa-times"></i>
-                 </button>
+                 <div class="card-tools">
+                   <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                     <i class="fas fa-minus"></i>
+                   </button>
+                   <button type="button" class="btn btn-tool" data-card-widget="remove">
+                     <i class="fas fa-times"></i>
+                   </button>
+                 </div>
                </div>
+               <div class="card-body">
+                 <div class="row">
+                   <div class="col-md-6">Pengeluaran Kas</div>
+                   <div class="col-md-6 text-right">Rp. <?= number_format($total_pengeluaran_kas); ?></div>
+                 </div>
+                 <div class="row">
+                   <div class="col-md-6">Pengeluaran Transfer BCA</div>
+                   <div class="col-md-6 text-right">Rp. <?= number_format($total_pengeluaran_transfer); ?></div>
+                 </div>
+                 <div class="row">
+                   <div class="col-md-6">&nbsp;</div>
+                   <div class="col-md-6">&nbsp;</div>
+                 </div>
+                 <div class="row">
+                   <div class="col-md-12">
+                     <hr>
+                   </div>
+                 </div>
+                 <div class="row">
+                   <div class="col-md-6">Total Pengeluaran</div>
+                   <div class="col-md-6 text-right">Rp. <?= number_format($total_pengeluaran_kas + $total_pengeluaran_transfer); ?></div>
+                 </div>
+               </div>
+               <!-- /.card-body -->
              </div>
-             <div class="card-body">
-               <div class="row">
-                 <div class="col-md-6">Pengeluaran Kas</div>
-                 <div class="col-md-6 text-right">Rp. <?= number_format($total_pengeluaran_kas); ?></div>
-               </div>
-               <div class="row">
-                 <div class="col-md-6">Pengeluaran Transfer BCA</div>
-                 <div class="col-md-6 text-right">Rp. <?= number_format($total_pengeluaran_transfer); ?></div>
-               </div>
-               <div class="row">
-                 <div class="col-md-6">&nbsp;</div>
-                 <div class="col-md-6">&nbsp;</div>
-               </div>
-               <div class="row">
-                 <div class="col-md-12"><hr></div>                 
-               </div>
-               <div class="row">
-                 <div class="col-md-6">Total Pengeluaran</div>
-                 <div class="col-md-6 text-right">Rp. <?= number_format($total_pengeluaran_kas+$total_pengeluaran_transfer); ?></div>
-               </div>
-             </div>
-             <!-- /.card-body -->
+             <!-- /.card -->
            </div>
-           <!-- /.card -->
-         </div>
+         <?php } ?>
        </div>
 
        <div class="row">
