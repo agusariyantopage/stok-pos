@@ -156,7 +156,7 @@
           </thead>
           <!-- Isi Tabel -->
           <?php
-          $sql = "SELECT produk.*,produk_kategori from produk,produk_kategori where produk.id_produk_kategori=produk_kategori.id_produk_kategori AND produk.id_produk_kategori!=1 order by nama";
+          $sql = "SELECT produk.*,produk_kategori from produk,produk_kategori where produk.id_produk_kategori=produk_kategori.id_produk_kategori order by nama";
           $query = mysqli_query($koneksi, $sql);
           while ($kolom = mysqli_fetch_array($query)) {
           ?>

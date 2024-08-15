@@ -83,12 +83,12 @@ if (!empty($_POST)) {
 
         array_push($_SESSION['jurnal_temporer'], $new_element);
         $jumlah = count($_SESSION['jurnal_temporer']);
-        for ($row = 0; $row < $jumlah; $row++) {
-            echo $_SESSION['jurnal_temporer'][$row][0] . ",";
-            echo $_SESSION['jurnal_temporer'][$row][1] . ",";
-            echo $_SESSION['jurnal_temporer'][$row][2] . ",";
-            echo $_SESSION['jurnal_temporer'][$row][3];
-        }
+        // for ($row = 0; $row < $jumlah; $row++) {
+        //     echo $_SESSION['jurnal_temporer'][$row][0] . ",";
+        //     echo $_SESSION['jurnal_temporer'][$row][1] . ",";
+        //     echo $_SESSION['jurnal_temporer'][$row][2] . ",";
+        //     echo $_SESSION['jurnal_temporer'][$row][3];
+        // }
         header('location:../index.php?p=jurnal-tambah');
     }
 }
