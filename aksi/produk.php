@@ -65,6 +65,14 @@
             $sql="update produk set konsinyasi=$konsinyasi, diubah_pada=DEFAULT where id_produk=$id_produk";            
             mysqli_query($koneksi,$sql);
         }
+        else if($_POST['aksi']=='set-harga'){
+            $set_harga=100+$_POST['set_harga'];
+            $sql="UPDATE produk SET harga_jual=($set_harga/100)*hpp";
+            mysqli_query($koneksi,$sql);
+            // echo $sql;
+            pesan_transaksi($koneksi);
+            header('location:../index.php?p=produk');
+        }
     }
     
 
@@ -107,6 +115,7 @@
             //echo $sql;
             header('location:../index.php?p=produk');
         }
+        
         
     }
 ?>

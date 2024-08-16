@@ -40,10 +40,10 @@ if (!empty($_POST)) {
         if ($terbayar >= $total - $diskon + $pajak) {
             $status_bayar = "Lunas";
             $terbayar = $total - $diskon + $pajak;
-            $sisa=0;
+            $sisa = 0;
         } else {
             $status_bayar = "Belum Lunas";
-            $sisa=($total - $diskon + $pajak)-$terbayar;
+            $sisa = ($total - $diskon + $pajak) - $terbayar;
         }
 
         $sql = "insert into jual (id_anggota, id_user, id_akun, keterangan_non_tunai, tanggal_transaksi, total, diskon, pajak, terbayar,status_bayar, dibuat_pada, diubah_pada) values($id_anggota,$id_user,$id_akun, '$keterangan_non_tunai','$tanggal_transaksi',$total,$diskon,$pajak,$terbayar,'$status_bayar',DEFAULT,DEFAULT)";
@@ -59,21 +59,24 @@ if (!empty($_POST)) {
 
         $sql2 = "select * from keranjang where id_user=$id_user";
         $query2 = mysqli_query($koneksi, $sql2);
+        $total_hpp = 0;
         while ($kolom2 = mysqli_fetch_array($query2)) {
             $id_produk = $kolom2['id_produk'];
             $hpp = $kolom2['hpp'];
             $harga_jual = $kolom2['harga'];
             $jumlah = $kolom2['jumlah'];
+            $hpp_barang = $hpp * $jumlah;
+            $total_hpp = $total_hpp + $hpp_barang;
 
             $sql3 = "insert into jual_detail(id_jual, id_produk, hpp, harga_jual, jumlah, dibuat_pada, diubah_pada) values($id_jual,$id_produk,$hpp,$harga_jual,$jumlah,DEFAULT,DEFAULT)";
             mysqli_query($koneksi, $sql3);
             // Update Stok Produk Pada Jenis Barang Non Jasa
-            $sql4="update produk set qty=qty-$jumlah where id_produk=$id_produk and servis=0";
-            mysqli_query($koneksi,$sql4);
+            $sql4 = "update produk set qty=qty-$jumlah where id_produk=$id_produk and servis=0";
+            mysqli_query($koneksi, $sql4);
         }
 
         // Simpan Pembayaran
-        $sql_pembayaran = "INSERT INTO jual_pembayaran(id_jual_pembayaran, id_jual, id_akun, keterangan, jumlah, tanggal_transaksi, dibuat_pada, diubah_pada) VALUES (DEFAULT, $id_jual, $id_akun, '$keterangan', $terbayar, '$tanggal_transaksi', DEFAULT, DEFAULT)";
+        $sql_pembayaran = "INSERT INTO jual_pembayaran(id_jual_pembayaran, id_jual, id_akun, keterangan, jumlah, tanggal_transaksi, dibuat_pada, diubah_pada) VALUES (DEFAULT, $id_jual, $id_akun, '', $terbayar, '$tanggal_transaksi', DEFAULT, DEFAULT)";
         mysqli_query($koneksi, $sql_pembayaran);
 
         $sukses = mysqli_affected_rows($koneksi);
@@ -85,7 +88,21 @@ if (!empty($_POST)) {
 
         // Jika Transaksi Luna Langsung Posting 1v1 Jika Tidak Posting 1v2
         if ($status_bayar == 'Lunas') {
-            posting_jurnal($koneksi, $tanggal_transaksi, $deskripsi, $deskripsi, $id_akun, 40, $total); // 40 Kode Akun Pendapatan Penjualan
+            // posting_jurnal($koneksi, $tanggal_transaksi, $deskripsi, $deskripsi, $id_akun, 40, $total); // 40 Kode Akun Pendapatan Penjualan
+
+            $nomor_jurnal = '';
+            $sql = "INSERT INTO akun_jurnal(id_akun_jurnal, nomor_jurnal, deskripsi,deskripsi_transaksi, tanggal_transaksi, dibuat_pada, diubah_pada) VALUES(DEFAULT,'$nomor_jurnal','$deskripsi','$deskripsi','$tanggal_transaksi',DEFAULT,DEFAULT)";
+            mysqli_query($koneksi, $sql);
+
+            $id_akun_jurnal = get_id_jurnal($koneksi);
+
+            // Kredit
+            $sql_debet = "INSERT INTO akun_mutasi(id_akun_mutasi, id_akun_jurnal, id_akun, debet, kredit, dibuat_pada, diubah_pada) VALUES(DEFAULT, $id_akun_jurnal, 40, 0,$total, DEFAULT, DEFAULT)";
+            mysqli_query($koneksi, $sql_debet);
+
+            // Debet
+            $sql_kredit1 = "INSERT INTO akun_mutasi(id_akun_mutasi, id_akun_jurnal, id_akun, kredit, debet, dibuat_pada, diubah_pada) VALUES(DEFAULT, $id_akun_jurnal, $id_akun, 0,$terbayar, DEFAULT, DEFAULT)";
+            mysqli_query($koneksi, $sql_kredit1); // Jurnal DP
         } else {
             $nomor_jurnal = '';
             $sql = "INSERT INTO akun_jurnal(id_akun_jurnal, nomor_jurnal, deskripsi,deskripsi_transaksi, tanggal_transaksi, dibuat_pada, diubah_pada) VALUES(DEFAULT,'$nomor_jurnal','$deskripsi','$deskripsi','$tanggal_transaksi',DEFAULT,DEFAULT)";
@@ -96,14 +113,25 @@ if (!empty($_POST)) {
             // Kredit
             $sql_debet = "INSERT INTO akun_mutasi(id_akun_mutasi, id_akun_jurnal, id_akun, debet, kredit, dibuat_pada, diubah_pada) VALUES(DEFAULT, $id_akun_jurnal, 40, 0,$total, DEFAULT, DEFAULT)";
             mysqli_query($koneksi, $sql_debet);
-            
+
             // Debet
             $sql_kredit1 = "INSERT INTO akun_mutasi(id_akun_mutasi, id_akun_jurnal, id_akun, kredit, debet, dibuat_pada, diubah_pada) VALUES(DEFAULT, $id_akun_jurnal, $id_akun, 0,$terbayar, DEFAULT, DEFAULT)";
             mysqli_query($koneksi, $sql_kredit1); // Jurnal DP
             $sql_kredit2 = "INSERT INTO akun_mutasi(id_akun_mutasi, id_akun_jurnal, id_akun, kredit, debet, dibuat_pada, diubah_pada) VALUES(DEFAULT, $id_akun_jurnal, 84, 0,$sisa, DEFAULT, DEFAULT)";
             mysqli_query($koneksi, $sql_kredit2); // Jurnal Piutang ID 84
 
+
+
         }
+
+        // Jurnal Persediaan
+        // Kredit
+        $sql_debet = "INSERT INTO akun_mutasi(id_akun_mutasi, id_akun_jurnal, id_akun, debet, kredit, dibuat_pada, diubah_pada) VALUES(DEFAULT, $id_akun_jurnal, 10, 0,$hpp, DEFAULT, DEFAULT)"; // HPP
+        mysqli_query($koneksi, $sql_debet);
+
+        // Debet
+        $sql_kredit = "INSERT INTO akun_mutasi(id_akun_mutasi, id_akun_jurnal, id_akun, kredit, debet, dibuat_pada, diubah_pada) VALUES(DEFAULT, $id_akun_jurnal, 46, 0,$hpp, DEFAULT, DEFAULT)";
+        mysqli_query($koneksi, $sql_kredit); // Persediaan
 
         $id_akun_jurnal = get_id_jurnal($koneksi);
         $sql_update_nomor_jurnal = "UPDATE jual SET id_akun_jurnal=$id_akun_jurnal WHERE id_jual=$id_jual";
@@ -120,12 +148,12 @@ if (!empty($_POST)) {
         $id_jual = $_POST['id_jual'];
         $id_anggota = $_POST['id_anggota'];
         $tanggal_transaksi = $_POST['tanggal_transaksi'];
-        $deskripsi_transaksi='Transaksi Penjualan #'.$id_jual;
+        $deskripsi_transaksi = 'Transaksi Penjualan #' . $id_jual;
 
         // UPDATE Tabel Jual
         $sql1 = "UPDATE jual SET id_anggota=$id_anggota,tanggal_transaksi='$tanggal_transaksi' where id_jual=$id_jual";
         mysqli_query($koneksi, $sql1);
-        pesan_transaksi($koneksi);        
+        pesan_transaksi($koneksi);
 
         // UPDATE Tabel Pembayaran
         $sql3 = "UPDATE jual_pembayaran SET tanggal_transaksi='$tanggal_transaksi' where id_jual=$id_jual";
@@ -133,7 +161,7 @@ if (!empty($_POST)) {
 
         // UPDATE Tabel Jurnal
         $sql4 = "UPDATE akun_jurnal SET tanggal_transaksi='$tanggal_transaksi' where deskripsi_transaksi='$deskripsi_transaksi'";
-        mysqli_query($koneksi, $sql4);        
+        mysqli_query($koneksi, $sql4);
 
         // Redirection
         header('location:../index.php?p=daftar-penjualan');
@@ -148,13 +176,13 @@ if (!empty($_POST)) {
         pesan_transaksi($koneksi);
 
         // Restore Stok 
-        $sql2a="SELECT * FROM jual_detail WHERE id_jual=$id_jual";
-        $query2a=mysqli_query($koneksi,$sql2a);
-        while($restore_stok=mysqli_fetch_array($query2a)){
-            $id_produk=$restore_stok['id_produk'];
-            $jumlah=$restore_stok['jumlah'];
-            $sql_restore="UPDATE produk SET qty=qty+$jumlah WHERE id_produk=$id_produk AND servis=0";
-            mysqli_query($koneksi,$sql_restore);
+        $sql2a = "SELECT * FROM jual_detail WHERE id_jual=$id_jual";
+        $query2a = mysqli_query($koneksi, $sql2a);
+        while ($restore_stok = mysqli_fetch_array($query2a)) {
+            $id_produk = $restore_stok['id_produk'];
+            $jumlah = $restore_stok['jumlah'];
+            $sql_restore = "UPDATE produk SET qty=qty+$jumlah WHERE id_produk=$id_produk AND servis=0";
+            mysqli_query($koneksi, $sql_restore);
         }
 
         // Delete Tabel Jual Detail

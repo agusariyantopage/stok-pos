@@ -21,6 +21,9 @@ else if ($_GET['p'] == 'kategori') {
 } else if ($_GET['p'] == 'produk-ubah') {
     $title  = $APP_TITLE . " " . $APP_VERSION . " | Ubah Produk";
     $konten = "konten/produk_ubah.php";
+} else if ($_GET['p'] == 'produk-impor') {
+    $title  = $APP_TITLE . " " . $APP_VERSION . " | impor Produk";
+    $konten = "konten/produk_impor.php";
 } else if ($_GET['p'] == 'anggota') {
     $title  = $APP_TITLE . " " . $APP_VERSION . " | Anggota";
     $konten = "konten/anggota.php";

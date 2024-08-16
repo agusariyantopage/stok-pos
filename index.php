@@ -10,6 +10,10 @@ include "controller.php";
 include "function.php";
 $status_proses = $_SESSION['status_proses'];
 date_default_timezone_set('Asia/Singapore');
+// // Include PhpSpreadsheet library autoloader 
+// require_once 'vendor/autoload.php'; 
+// use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+// $Reader = new Xlsx();
 
 ?>
 <!DOCTYPE html>
