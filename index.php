@@ -669,10 +669,10 @@ date_default_timezone_set('Asia/Singapore');
     $sql = mysqli_query($koneksi, $query);
     // untuk pengulangan baris
     while ($row = mysqli_fetch_array($sql)) {
-      $tahun_bulan=$row['tahun_bulan'];
-      $sql_biaya="SELECT COALESCE(SUM(debet-kredit),0) AS total_pengeluaran FROM akun_mutasi INNER JOIN akun ON akun.id_akun=akun_mutasi.id_akun INNER JOIN akun_jurnal ON akun_jurnal.id_akun_jurnal=akun_mutasi.id_akun_jurnal WHERE akun.akun LIKE '%Biaya%' AND CONCAT(YEAR(tanggal_transaksi),'-',MONTHNAME(tanggal_transaksi))='$tahun_bulan'";
-      $query_biaya=mysqli_query($koneksi,$sql_biaya);
-      $biaya=mysqli_fetch_array($query_biaya);
+      $tahun_bulan = $row['tahun_bulan'];
+      $sql_biaya = "SELECT COALESCE(SUM(debet-kredit),0) AS total_pengeluaran FROM akun_mutasi INNER JOIN akun ON akun.id_akun=akun_mutasi.id_akun INNER JOIN akun_jurnal ON akun_jurnal.id_akun_jurnal=akun_mutasi.id_akun_jurnal WHERE akun.akun LIKE '%Biaya%' AND CONCAT(YEAR(tanggal_transaksi),'-',MONTHNAME(tanggal_transaksi))='$tahun_bulan'";
+      $query_biaya = mysqli_query($koneksi, $sql_biaya);
+      $biaya = mysqli_fetch_array($query_biaya);
 
       $nama_tahun[] = $row['tahun_bulan'];
       $jumlah_tahun[] = $row['jumlah_bulanan'];
@@ -720,6 +720,86 @@ date_default_timezone_set('Asia/Singapore');
     })
 
     //---------------------
+  </script>
+
+  <script>
+    //-------------
+    //- AREA CHART -
+    //-------------
+    <?php
+    // mengambil data dari tabel user
+    $query = "SELECT CONCAT(YEAR(tanggal_transaksi),'-',MONTHNAME(tanggal_transaksi)) AS tahun_bulan, SUM(total) AS jumlah_bulanan FROM jual GROUP BY YEAR(tanggal_transaksi),MONTH(tanggal_transaksi)";
+    $sql = mysqli_query($koneksi, $query);
+    // untuk pengulangan baris
+    while ($row = mysqli_fetch_array($sql)) {
+      $tahun_bulan = $row['tahun_bulan'];
+      $sql_biaya = "SELECT COALESCE(SUM(debet-kredit),0) AS total_pengeluaran FROM akun_mutasi INNER JOIN akun ON akun.id_akun=akun_mutasi.id_akun INNER JOIN akun_jurnal ON akun_jurnal.id_akun_jurnal=akun_mutasi.id_akun_jurnal WHERE akun.akun LIKE '%Biaya%' AND CONCAT(YEAR(tanggal_transaksi),'-',MONTHNAME(tanggal_transaksi))='$tahun_bulan'";
+      $query_biaya = mysqli_query($koneksi, $sql_biaya);
+      $biaya = mysqli_fetch_array($query_biaya);
+
+      $nama_tahun_area[] = $row['tahun_bulan'];
+      $jumlah_tahun_area[] = $row['jumlah_bulanan'];
+      $biaya_tahun_area[] = $biaya['total_pengeluaran'];
+      // $biaya_tahun_area[] = 1000;
+    } ?>
+    var areaChartCanvas = $('#areaChart').get(0).getContext('2d')
+    var areaChartData = {
+      labels: <?php echo json_encode($nama_tahun_area); ?>,
+      datasets: [{
+          label: 'Omset',
+          backgroundColor     : 'rgba(60,141,188,0.9)',
+          borderColor         : 'rgba(60,141,188,0.8)',
+          pointRadius          : false,
+          pointColor          : '#3b8bba',
+          pointStrokeColor    : 'rgba(60,141,188,1)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(60,141,188,1)',
+          data: <?php echo json_encode($jumlah_tahun_area); ?>
+        },
+        {
+          label: 'Biaya',
+          backgroundColor     : 'rgba(210, 214, 222, 1)',
+          borderColor         : 'rgba(210, 214, 222, 1)',
+          pointRadius         : false,
+          pointColor          : 'rgba(210, 214, 222, 1)',
+          pointStrokeColor    : '#c1c7d1',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(220,220,220,1)',
+          data: <?php echo json_encode($biaya_tahun_area); ?>
+        }
+      ]
+    }
+
+    var areaChartOptions = {
+      maintainAspectRatio: false,
+      responsive: true,
+      legend: {
+        display: false
+      },
+      scales: {
+        xAxes: [{
+          gridLines: {
+            display: false,
+          }
+        }],
+        yAxes: [{
+          gridLines: {
+            display: false,
+          }
+        }]
+      }
+    }
+
+    // This will get the first returned node in the jQuery collection.
+    new Chart(areaChartCanvas, {
+      type: 'line',
+      data: areaChartData,
+      options: areaChartOptions
+    })
+
+    //---------------------
+
+    
   </script>
 
 

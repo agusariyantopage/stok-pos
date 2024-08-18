@@ -12,7 +12,7 @@ $id_beli = $_GET['token'];
         </div><!-- /.col -->
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="#">Toko</a></li>
+            <li class="breadcrumb-item"><a href="#">Transaksi</a></li>
             <li class="breadcrumb-item"><a href="index.php?p=daftar-pembelian ">Pembelian</a></li>
             <li class="breadcrumb-item active">Ubah Pembelian</li>
           </ol>

@@ -59,7 +59,7 @@
                     <td align="right"><?= number_format($kolom['kredit']); ?></td>
                     <td>
                       <?php
-                          if(strpos($kolom['deskripsi'],"Penjualan #")){
+                          if(strpos($kolom['deskripsi'],"Penjualan #")||strpos($kolom['deskripsi'],"Pembelian #")){
                             echo "";
                           } else {
                       ?>
@@ -100,7 +100,7 @@
                 }
                 ?>
               </table>
-
+                <i>Catatan : Transaksi Pembelian & Penjualan Hanya Dapat Di Hapus Dari Transaksi</i>
 
 
             </div>
