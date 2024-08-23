@@ -1,6 +1,7 @@
 <?php
 session_start();
 include '../../koneksi.php';
+include '../../function.php';
 
 //============================================================+
 // File name   : example_006.php
@@ -192,12 +193,29 @@ $html.='
 </table>';
 
 
+// $sisa=1000;
+// $html.='
+// <br><br>
+// Terbilang : '.terbilang($sisa).'
+// ';
 
 $html.='
-
-<p align="center">-- Terima Kasih Atas Kunjungan Anda --</p>
-
+<br><br>
+<table>
+<tr>
+    <td width="50%" align="center">
+Diketahui Oleh<br><br><br><br>
+______________________________
+    </td>
+    <td width="50%" align="center">
+Diterima Oleh<br><br><br><br>
+______________________________
+    </td>
+</tr>
+</table>
 ';
+
+// <p align="center">-- Terima Kasih Atas Kunjungan Anda --</p>
 
 // output the HTML content
 $pdf->writeHTML($html, true, false, true, false, '');
