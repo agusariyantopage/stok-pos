@@ -20,6 +20,12 @@
                 </a>
               </li>              
               <li class="nav-item">
+                <a href="index.php?p=pemasok" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Pemasok</p>
+                </a>
+              </li>              
+              <li class="nav-item">
                 <a href="index.php?p=anggota" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Pelanggan</p>
