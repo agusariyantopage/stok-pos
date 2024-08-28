@@ -62,12 +62,18 @@
   $total_kas_hari_ini = $data_hari_ini['total_kas_hari_ini'];
   $total_bca_hari_ini = $data_hari_ini['total_bca_hari_ini'];
 
-  // Biaya Hari Ini
-  $sql_biaya_hari_ini = "SELECT SUM(IF((SELECT id_akun FROM akun_mutasi WHERE a.id_akun_jurnal=akun_mutasi.id_akun_jurnal AND a.id_akun!=akun_mutasi.id_akun)=3,a.debet-a.kredit,0)) AS total_pengeluaran_kas,SUM(IF((SELECT id_akun FROM akun_mutasi WHERE a.id_akun_jurnal=akun_mutasi.id_akun_jurnal AND a.id_akun!=akun_mutasi.id_akun)=5,a.debet-a.kredit,0)) AS total_pengeluaran_transfer from akun_mutasi a,akun_jurnal,akun where a.id_akun_jurnal=akun_jurnal.id_akun_jurnal and a.id_akun=akun.id_akun and akun.akun LIKE '%Biaya%' AND tanggal_transaksi='$hari_ini'";
-  $query_biaya_hari_ini = mysqli_query($koneksi, $sql_biaya_hari_ini);
+  // Biaya Kas Hari Ini
+  $sql_biaya_hari_ini="SELECT SUM(debet-kredit) AS total_pengeluaran_kas FROM akun_mutasi,akun_jurnal WHERE akun_mutasi.id_akun_jurnal IN(SELECT a.id_akun_jurnal FROM akun_mutasi a,akun WHERE akun.id_akun=a.id_akun AND akun.akun LIKE '%Biaya%') AND akun_jurnal.id_akun_jurnal=akun_mutasi.id_akun_jurnal AND id_akun=3";
+    $query_biaya_hari_ini = mysqli_query($koneksi, $sql_biaya_hari_ini);
   $data_biaya_hari_ini = mysqli_fetch_array($query_biaya_hari_ini);
   $total_pengeluaran_kas = $data_biaya_hari_ini['total_pengeluaran_kas'];
-  $total_pengeluaran_transfer = $data_biaya_hari_ini['total_pengeluaran_transfer'];
+  $total_pengeluaran_transfer = $data_biaya_hari_ini['total_pengeluaran_kas'];
+
+  // Biaya Transfer Hari Ini
+  $sql_biaya_hari_ini="SELECT SUM(debet-kredit) AS total_pengeluaran_transfer FROM akun_mutasi,akun_jurnal WHERE akun_mutasi.id_akun_jurnal IN(SELECT a.id_akun_jurnal FROM akun_mutasi a,akun WHERE akun.id_akun=a.id_akun AND akun.akun LIKE '%Biaya%') AND akun_jurnal.id_akun_jurnal=akun_mutasi.id_akun_jurnal AND id_akun=5";
+    $query_biaya_hari_ini = mysqli_query($koneksi, $sql_biaya_hari_ini);
+  $data_biaya_hari_ini = mysqli_fetch_array($query_biaya_hari_ini);
+    $total_pengeluaran_transfer = $data_biaya_hari_ini['total_pengeluaran_transfer'];
 
   // SELECT akun_jurnal.id_akun_jurnal,a.id_akun,tanggal_transaksi,deskripsi,a.debet-a.kredit as total_transaksi,(SELECT id_akun FROM akun_mutasi WHERE a.id_akun_jurnal=akun_mutasi.id_akun_jurnal AND a.id_akun!=akun_mutasi.id_akun) AS total_pengeluaran_kas from akun_mutasi a,akun_jurnal,akun where a.id_akun_jurnal=akun_jurnal.id_akun_jurnal and a.id_akun=akun.id_akun and akun.akun LIKE '%Biaya%'
 
