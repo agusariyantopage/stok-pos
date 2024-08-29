@@ -5,7 +5,7 @@
     $APP_VERSION="1.0";
     $APP_VERSION_LAST_UPDATE="13 Agustus 2024";
     $APP_COMPANY_NAME="Bali Tekno Abadi";
-    $APP_COMPANY_ADDRESS="Jl. Diponegoro no 63 Denpasar - Bali";
+    $APP_COMPANY_ADDRESS="DPS (GUDANG)";
     $APP_COMPANY_PHONE="087863197700";
     $APP_COMPANY_EMAIL="info@baliteknoabadi.com";
     $APP_LOGO="dist/img/logo.jpg";
