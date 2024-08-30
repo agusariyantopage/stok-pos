@@ -35,7 +35,7 @@ if (!empty($_POST)) {
         $tanggal_transaksi = $_POST['tanggal_transaksi'];
         $total = $_POST['total'];
         $diskon = $_POST['diskon'];
-        $pajak = 0;
+        $pajak = $_POST['ppn'];        
         $terbayar = $_POST['terbayar'];
         if ($terbayar >= $total - $diskon + $pajak) {
             $status_bayar = "Lunas";
@@ -142,6 +142,10 @@ if (!empty($_POST)) {
         mysqli_query($koneksi, $sql4);
         $url_struk = $BASE_URL . "pdf/output/struk.php?token=" . md5($id_jual);
 
+        // Reset Diskon + Pajak
+        $_SESSION['diskon']=0;
+        $_SESSION['ppn']=0;
+
         $link = 'location:../index.php?p=penjualan&last=' . md5($id_jual);
         header($link);
     } else if ($_POST['aksi'] == 'update-penjualan') { // (Tanggal & Pelanggan Saja)
@@ -209,6 +213,14 @@ if (!empty($_POST)) {
 
         // Redirection
         header('location:../index.php?p=daftar-penjualan');
+    } else if($_POST['aksi'] == 'set-diskon'){
+        $diskon = str_replace(',', '',$_POST['diskon']);
+        $_SESSION['diskon']=$diskon;
+        header('location:../index.php?p=penjualan');
+    } else if($_POST['aksi'] == 'set-ppn'){
+        $ppn = $_POST['ppn'];
+        $_SESSION['ppn']=$ppn;
+        header('location:../index.php?p=penjualan');
     }
 }
 

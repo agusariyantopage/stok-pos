@@ -48,6 +48,8 @@
 
                 $_SESSION['status_proses']         =''; 
                 $_SESSION['jurnal_temporer']=array();
+                $_SESSION['diskon']=0;
+                $_SESSION['ppn']=0;
                 
                 // Update Status User
                 $sql2="update user set terakhir_login=DEFAULT,status='ONLINE' where id_user=$_SESSION[backend_user_id]";

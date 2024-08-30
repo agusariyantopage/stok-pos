@@ -9,6 +9,7 @@ $sql1 = "SELECT jual.*,anggota.nama as napel,akun.akun from jual,anggota,akun wh
 $query1 = mysqli_query($koneksi, $sql1);
 $kolom1 = mysqli_fetch_array($query1);
 $terbayar = $kolom1['terbayar'];
+$grandtotal=$kolom1['total'];
 $pajak = $kolom1['pajak'];
 $diskon = $kolom1['diskon'];
 
@@ -56,10 +57,10 @@ $diskon = $kolom1['diskon'];
 	<tbody>
 		<?php
 
-		$sql2 = "SELECT jual_detail.*,produk.* from jual_detail,produk where jual_detail.id_produk=produk.id_produk and id_jual='$id_jual' ORDER BY produk.nama";
+		$sql2 = "SELECT jual_detail.*,produk.nama from jual_detail,produk where jual_detail.id_produk=produk.id_produk and id_jual='$id_jual' ORDER BY produk.nama";
 		$query2 = mysqli_query($koneksi, $sql2);
 		$no = 0;
-		$grandtotal = 0;
+		// $grandtotal = 0;
 		$jumlah_item = 0;
 		while ($kolom2 = mysqli_fetch_array($query2)) {
 			$no++;
@@ -67,7 +68,7 @@ $diskon = $kolom1['diskon'];
 			$jumlah = number_format($kolom2['jumlah'], 2);
 			$jumlah_item = $jumlah_item + $jumlah;
 			$subtotal = number_format($kolom2['jumlah'] * $kolom2['harga_jual']);
-			$grandtotal = $grandtotal + ($kolom2['jumlah'] * $kolom2['harga_jual']);
+			// $grandtotal = $grandtotal + ($kolom2['jumlah'] * $kolom2['harga_jual']);
 			$token = md5($kolom2['id_jual']);
 			echo "
 		<tr>
@@ -88,7 +89,7 @@ $diskon = $kolom1['diskon'];
 			<td align='left' colspan="3">TOTAL</td>
 			<td align="right"><?= number_format($jumlah_item, 2) ?></td>
 			<td align='right'>
-				<p><?= number_format($grandtotal); ?></p>
+				<p><?= number_format($grandtotal+$diskon-$pajak); ?></p>
 			</td>
 		</tr>
 		<tr>
@@ -98,9 +99,15 @@ $diskon = $kolom1['diskon'];
 			</td>
 		</tr>
 		<tr>
+			<td align='left' colspan="4">PAJAK</td>
+			<td align='right'>
+				<p><?= number_format($pajak); ?></p>
+			</td>
+		</tr>
+		<tr>
 			<td align='left' colspan="4">GRANDTOTAL</td>
 			<td align='right'>
-				<p><?= number_format($grandtotal - $diskon); ?></p>
+				<p><?= number_format($grandtotal); ?></p>
 			</td>
 		</tr>
 		<tr>
@@ -112,14 +119,14 @@ $diskon = $kolom1['diskon'];
 		<tr>
 			<td align='left' colspan="4">SISA PEMBAYARAN</td>
 			<td align='right'>
-				<p><?= number_format(-$terbayar + $grandtotal - $diskon); ?></p>
+				<p><?= number_format($grandtotal-$terbayar); ?></p>
 			</td>
 		</tr>
 	</tfoot>
 </table>
 
 <?php
-if (-$terbayar + $grandtotal - $diskon > 0) {
+if (-$terbayar + $grandtotal  > 0) {
 	echo "
 		<label>PROSES SISA PEMBAYARAN</label>
 	";
@@ -148,7 +155,7 @@ if (-$terbayar + $grandtotal - $diskon > 0) {
 			</div>
 			<div class="form-group col-sm-2">
 				<label for="jumlah">Nominal</label>
-				<input class="form-control" type="number" value="0" min="1" max="<?= -$terbayar + $grandtotal - $diskon; ?>" autofocus placeholder="Nominal Bayar . . ." name="jumlah" required>
+				<input class="form-control" type="number" value="0" min="1" max="<?= -$terbayar + $grandtotal ; ?>" autofocus placeholder="Nominal Bayar . . ." name="jumlah" required>
 			</div>
 			<div class="form-group col-sm-2 align-self-end">
 				<input type="hidden" name="id_jual" value="<?= $id_jual; ?>">

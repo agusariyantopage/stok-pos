@@ -1,9 +1,19 @@
 <?php
-  if(!empty($_POST['diskon'])){
-    $diskon=str_replace(',','',$_POST['diskon']);
-  } else {
-    $diskon=0;
-  }
+  // if(!empty($_POST['diskon'])){
+  //   $diskon=str_replace(',','',$_POST['diskon']);
+  //   $_SESSION['diskon']=$diskon;
+  // } else {
+  //   $diskon=$_SESSION['diskon'];
+  // }
+  // if(!empty($_POST['ppn'])){
+  //   $ppn=$_POST['ppn'];
+  //   // $ppn=str_replace(',','',$_POST['ppn']);
+  //   $_SESSION['ppn']=$ppn;
+  // } else {
+  //   $ppn=$_SESSION['ppn'];
+  // }
+  $diskon=$_SESSION['diskon'];
+  $ppn=$_SESSION['ppn'];
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -110,7 +120,7 @@
                         <input type='hidden' name='id' value='$kolom2[id_keranjang]'> 
                         <div class='form-row'>
                               <div class='col'>
-                                  <input type='number' step='0.01' name='qty' class='form-control form-control-sm mb-2' value='$kolom2[jumlah]'>
+                                  <input type='number' step='1' name='qty' class='form-control form-control-sm mb-2' value='$kolom2[jumlah]'>
                               </div>
                               <div class='col'>
                                   <button class='btn btn-sm btn-warning' type='submit' data-toggle='tooltip' data-placement='top' title='Klik Untuk Mengubah Jumlah . . .'><i class='fas fa-edit'></i></button>
@@ -122,7 +132,9 @@
                     </tr>
                     ";
                   }
-                  $grandtotal = $total - $diskon;
+                  
+                  $ppn=$ppn/100*($total - $diskon);
+                  $grandtotal = $total - $diskon + $ppn;
                   ?>
 
                 </tbody>
@@ -140,6 +152,16 @@
                     <td align='right'>
                       <p>
                         <?= number_format($diskon); ?>
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align='center' colspan="5">
+                      PPN 11% <button type="button" class="btn btn-link" data-toggle="modal" data-target="#setPPN"><i class="fas fa-calculator"></i></button>
+                    </td>
+                    <td align='right'>
+                      <p>
+                        <?= number_format($ppn); ?>
                       </p>
                     </td>
                   </tr>
@@ -244,6 +266,7 @@
           <input type="hidden" name="aksi" value="simpan-penjualan">
           <input type="hidden" id="grandtotal" name="total" value="<?= $grandtotal; ?>">
           <input type="hidden" name="diskon" value="<?= $diskon; ?>">
+          <input type="hidden" name="ppn" value="<?= $ppn; ?>">
           <input type="hidden" name="metode_bayar" value="TUNAI">
           <input type="hidden" name="id_akun" value="3"> <!-- Kode Akun 'KAS' -->
           <input type="hidden" name="keterangan_non_tunai" value="-"> <!-- Kode Akun 'KAS' -->
@@ -301,6 +324,7 @@
           <input type="hidden" name="aksi" value="simpan-penjualan">
           <input type="hidden" name="total" value="<?= $grandtotal; ?>">
           <input type="hidden" name="diskon" value="<?= $diskon; ?>">
+          <input type="hidden" name="ppn" value="<?= $ppn; ?>">
           <input type="hidden" name="metode_bayar" value="NON TUNAI">
           <div class="form-row">
 
@@ -391,9 +415,35 @@
         <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="" method="post">
+        <form action="aksi/penjualan.php" method="post">
+        <input type="hidden" name="aksi" value="set-diskon">
           <input type='text' style="text-align:right;" name='diskon' class='form-control form-control-sm mb-2 number-separator' value='<?= number_format($diskon); ?>'>
 
+      </div>
+      <div class="modal-footer">
+        <button class='btn btn-info' type='submit'><i class='fas fa-check'></i> Proses</button>
+        </form>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal Set PPN -->
+<div class="modal fade" id="setPPN" tabindex="-1" aria-labelledby="setPPNLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="setPPNLabel">Setup PPN</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <form action="aksi/penjualan.php" method="post">
+      <input type="hidden" name="aksi" value="set-ppn">
+          <label for="PPN">PPN</label>
+          <select name="ppn" class="form-control" required>
+            <option value="0">Tidak</option>
+            <option value="11">Ya</option>
+          </select>
       </div>
       <div class="modal-footer">
         <button class='btn btn-info' type='submit'><i class='fas fa-check'></i> Proses</button>

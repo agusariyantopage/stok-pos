@@ -141,7 +141,7 @@ $html = '<p style="text-align: center;"><strong>INVOICE</strong></p>
     </thead>
 <tbody>';
 
-$sql2="SELECT jual_detail.*,jual.diskon,produk.* from jual_detail,jual,produk where jual_detail.id_jual=jual.id_jual and produk.id_produk=jual_detail.id_produk AND md5(jual_detail.id_jual)='$id_jual'";
+$sql2="SELECT jual_detail.*,jual.diskon,jual.pajak,produk.nama,produk.keterangan from jual_detail,jual,produk where jual_detail.id_jual=jual.id_jual and produk.id_produk=jual_detail.id_produk AND md5(jual_detail.id_jual)='$id_jual'";
 $query2=mysqli_query($koneksi,$sql2);
 $no=0;
 $grandtotal=0;
@@ -165,22 +165,29 @@ $html.='
         ';
 }        
 $terbayar=$kolom1['terbayar'];
-$sisa=($kolom1['total']-$kolom1['diskon']+$kolom1['pajak'])-$terbayar;
+$sisa=-$terbayar+$kolom1['total'];
+$grandtotal=$kolom1['total'];
+$pajak = $kolom1['pajak'];
+$diskon = $kolom1['diskon'];
 $html.='
 </tbody>
 
 <tr>
 <td align="left" colspan="3"> TOTAL</td>
 <td align="right" >'.number_format($jumlah_item,2).'</td>
-<td align="right" >Rp. '.number_format($grandtotal).'</td>
+<td align="right" >Rp. '.number_format($grandtotal+$diskon-$pajak).'</td>
 </tr>
 <tr>
 <td align="left" colspan="4" > DISKON</td>
 <td align="right" >Rp. '.number_format($diskon).'</td>
 </tr>
 <tr>
+<td align="left" colspan="4" > PAJAK</td>
+<td align="right" >Rp. '.number_format($pajak).'</td>
+</tr>
+<tr>
 <td align="left" colspan="4" > GRANDTOTAL</td>
-<td align="right" >Rp. '.number_format($grandtotal-$diskon).'</td>
+<td align="right" >Rp. '.number_format($grandtotal).'</td>
 </tr>
 <tr>
 <td align="left" colspan="4" > TERBAYAR</td>
