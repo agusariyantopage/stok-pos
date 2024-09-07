@@ -86,56 +86,56 @@ if (!empty($_POST)) {
 
         $deskripsi = "Transaksi Penjualan #" . $id_jual;
 
-        // Jika Transaksi Luna Langsung Posting 1v1 Jika Tidak Posting 1v2
-        if ($status_bayar == 'Lunas') {
-            // posting_jurnal($koneksi, $tanggal_transaksi, $deskripsi, $deskripsi, $id_akun, 40, $total); // 40 Kode Akun Pendapatan Penjualan
+        // // Jika Transaksi Luna Langsung Posting 1v1 Jika Tidak Posting 1v2 [Dinonaktifkan]
+        // if ($status_bayar == 'Lunas') {
+        //     // posting_jurnal($koneksi, $tanggal_transaksi, $deskripsi, $deskripsi, $id_akun, 40, $total); // 40 Kode Akun Pendapatan Penjualan
 
-            $nomor_jurnal = '';
-            $sql = "INSERT INTO akun_jurnal(id_akun_jurnal, nomor_jurnal, deskripsi,deskripsi_transaksi, tanggal_transaksi, dibuat_pada, diubah_pada) VALUES(DEFAULT,'$nomor_jurnal','$deskripsi','$deskripsi','$tanggal_transaksi',DEFAULT,DEFAULT)";
-            mysqli_query($koneksi, $sql);
+        //     $nomor_jurnal = '';
+        //     $sql = "INSERT INTO akun_jurnal(id_akun_jurnal, nomor_jurnal, deskripsi,deskripsi_transaksi, tanggal_transaksi, dibuat_pada, diubah_pada) VALUES(DEFAULT,'$nomor_jurnal','$deskripsi','$deskripsi','$tanggal_transaksi',DEFAULT,DEFAULT)";
+        //     mysqli_query($koneksi, $sql);
 
-            $id_akun_jurnal = get_id_jurnal($koneksi);
+        //     $id_akun_jurnal = get_id_jurnal($koneksi);
 
-            // Kredit
-            $sql_debet = "INSERT INTO akun_mutasi(id_akun_mutasi, id_akun_jurnal, id_akun, debet, kredit, dibuat_pada, diubah_pada) VALUES(DEFAULT, $id_akun_jurnal, 40, 0,$total, DEFAULT, DEFAULT)";
-            mysqli_query($koneksi, $sql_debet);
+        //     // Kredit
+        //     $sql_debet = "INSERT INTO akun_mutasi(id_akun_mutasi, id_akun_jurnal, id_akun, debet, kredit, dibuat_pada, diubah_pada) VALUES(DEFAULT, $id_akun_jurnal, 40, 0,$total, DEFAULT, DEFAULT)";
+        //     mysqli_query($koneksi, $sql_debet);
 
-            // Debet
-            $sql_kredit1 = "INSERT INTO akun_mutasi(id_akun_mutasi, id_akun_jurnal, id_akun, kredit, debet, dibuat_pada, diubah_pada) VALUES(DEFAULT, $id_akun_jurnal, $id_akun, 0,$terbayar, DEFAULT, DEFAULT)";
-            mysqli_query($koneksi, $sql_kredit1); // Jurnal DP
-        } else {
-            $nomor_jurnal = '';
-            $sql = "INSERT INTO akun_jurnal(id_akun_jurnal, nomor_jurnal, deskripsi,deskripsi_transaksi, tanggal_transaksi, dibuat_pada, diubah_pada) VALUES(DEFAULT,'$nomor_jurnal','$deskripsi','$deskripsi','$tanggal_transaksi',DEFAULT,DEFAULT)";
-            mysqli_query($koneksi, $sql);
+        //     // Debet
+        //     $sql_kredit1 = "INSERT INTO akun_mutasi(id_akun_mutasi, id_akun_jurnal, id_akun, kredit, debet, dibuat_pada, diubah_pada) VALUES(DEFAULT, $id_akun_jurnal, $id_akun, 0,$terbayar, DEFAULT, DEFAULT)";
+        //     mysqli_query($koneksi, $sql_kredit1); // Jurnal DP
+        // } else {
+        //     $nomor_jurnal = '';
+        //     $sql = "INSERT INTO akun_jurnal(id_akun_jurnal, nomor_jurnal, deskripsi,deskripsi_transaksi, tanggal_transaksi, dibuat_pada, diubah_pada) VALUES(DEFAULT,'$nomor_jurnal','$deskripsi','$deskripsi','$tanggal_transaksi',DEFAULT,DEFAULT)";
+        //     mysqli_query($koneksi, $sql);
 
-            $id_akun_jurnal = get_id_jurnal($koneksi);
+        //     $id_akun_jurnal = get_id_jurnal($koneksi);
 
-            // Kredit
-            $sql_debet = "INSERT INTO akun_mutasi(id_akun_mutasi, id_akun_jurnal, id_akun, debet, kredit, dibuat_pada, diubah_pada) VALUES(DEFAULT, $id_akun_jurnal, 40, 0,$total, DEFAULT, DEFAULT)";
-            mysqli_query($koneksi, $sql_debet);
+        //     // Kredit
+        //     $sql_debet = "INSERT INTO akun_mutasi(id_akun_mutasi, id_akun_jurnal, id_akun, debet, kredit, dibuat_pada, diubah_pada) VALUES(DEFAULT, $id_akun_jurnal, 40, 0,$total, DEFAULT, DEFAULT)";
+        //     mysqli_query($koneksi, $sql_debet);
 
-            // Debet
-            $sql_kredit1 = "INSERT INTO akun_mutasi(id_akun_mutasi, id_akun_jurnal, id_akun, kredit, debet, dibuat_pada, diubah_pada) VALUES(DEFAULT, $id_akun_jurnal, $id_akun, 0,$terbayar, DEFAULT, DEFAULT)";
-            mysqli_query($koneksi, $sql_kredit1); // Jurnal DP
-            $sql_kredit2 = "INSERT INTO akun_mutasi(id_akun_mutasi, id_akun_jurnal, id_akun, kredit, debet, dibuat_pada, diubah_pada) VALUES(DEFAULT, $id_akun_jurnal, 84, 0,$sisa, DEFAULT, DEFAULT)";
-            mysqli_query($koneksi, $sql_kredit2); // Jurnal Piutang ID 84
+        //     // Debet
+        //     $sql_kredit1 = "INSERT INTO akun_mutasi(id_akun_mutasi, id_akun_jurnal, id_akun, kredit, debet, dibuat_pada, diubah_pada) VALUES(DEFAULT, $id_akun_jurnal, $id_akun, 0,$terbayar, DEFAULT, DEFAULT)";
+        //     mysqli_query($koneksi, $sql_kredit1); // Jurnal DP
+        //     $sql_kredit2 = "INSERT INTO akun_mutasi(id_akun_mutasi, id_akun_jurnal, id_akun, kredit, debet, dibuat_pada, diubah_pada) VALUES(DEFAULT, $id_akun_jurnal, 84, 0,$sisa, DEFAULT, DEFAULT)";
+        //     mysqli_query($koneksi, $sql_kredit2); // Jurnal Piutang ID 84
 
 
 
-        }
+        // }
 
-        // Jurnal Persediaan
-        // Kredit
-        $sql_debet = "INSERT INTO akun_mutasi(id_akun_mutasi, id_akun_jurnal, id_akun, debet, kredit, dibuat_pada, diubah_pada) VALUES(DEFAULT, $id_akun_jurnal, 10, 0,$hpp, DEFAULT, DEFAULT)"; // HPP
-        mysqli_query($koneksi, $sql_debet);
+        // // Jurnal Persediaan
+        // // Kredit
+        // $sql_debet = "INSERT INTO akun_mutasi(id_akun_mutasi, id_akun_jurnal, id_akun, debet, kredit, dibuat_pada, diubah_pada) VALUES(DEFAULT, $id_akun_jurnal, 10, 0,$hpp, DEFAULT, DEFAULT)"; // HPP
+        // mysqli_query($koneksi, $sql_debet);
 
-        // Debet
-        $sql_kredit = "INSERT INTO akun_mutasi(id_akun_mutasi, id_akun_jurnal, id_akun, kredit, debet, dibuat_pada, diubah_pada) VALUES(DEFAULT, $id_akun_jurnal, 46, 0,$hpp, DEFAULT, DEFAULT)";
-        mysqli_query($koneksi, $sql_kredit); // Persediaan
+        // // Debet
+        // $sql_kredit = "INSERT INTO akun_mutasi(id_akun_mutasi, id_akun_jurnal, id_akun, kredit, debet, dibuat_pada, diubah_pada) VALUES(DEFAULT, $id_akun_jurnal, 46, 0,$hpp, DEFAULT, DEFAULT)";
+        // mysqli_query($koneksi, $sql_kredit); // Persediaan
 
-        $id_akun_jurnal = get_id_jurnal($koneksi);
-        $sql_update_nomor_jurnal = "UPDATE jual SET id_akun_jurnal=$id_akun_jurnal WHERE id_jual=$id_jual";
-        mysqli_query($koneksi, $sql_update_nomor_jurnal);
+        // $id_akun_jurnal = get_id_jurnal($koneksi);
+        // $sql_update_nomor_jurnal = "UPDATE jual SET id_akun_jurnal=$id_akun_jurnal WHERE id_jual=$id_jual";
+        // mysqli_query($koneksi, $sql_update_nomor_jurnal);
 
         // Kosongkan Keranjang
         $sql4 = "delete from keranjang where id_user=$id_user";

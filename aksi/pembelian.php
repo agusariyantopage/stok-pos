@@ -91,13 +91,13 @@ if (!empty($_POST)) {
             $_SESSION['status_proses'] = 'SUKSES SIMPAN BELI';
         }
 
-        if ($total > 0) {
-            $deskripsi = "Transaksi Pembelian #" . $id_beli;
-            posting_jurnal($koneksi, $tanggal_transaksi, $deskripsi,$deskripsi, 10, $id_akun, $total); // 10 Kode Persediaan Bahan Baku
-            $id_akun_jurnal = get_id_jurnal($koneksi);
-            $sql_update_nomor_jurnal = "UPDATE beli SET id_akun_jurnal=$id_akun_jurnal WHERE id_beli=$id_beli";
-            mysqli_query($koneksi, $sql_update_nomor_jurnal);
-        }
+        // if ($total > 0) {
+        //     $deskripsi = "Transaksi Pembelian #" . $id_beli;
+        //     posting_jurnal($koneksi, $tanggal_transaksi, $deskripsi,$deskripsi, 10, $id_akun, $total); // 10 Kode Persediaan Bahan Baku
+        //     $id_akun_jurnal = get_id_jurnal($koneksi);
+        //     $sql_update_nomor_jurnal = "UPDATE beli SET id_akun_jurnal=$id_akun_jurnal WHERE id_beli=$id_beli";
+        //     mysqli_query($koneksi, $sql_update_nomor_jurnal);
+        // }
 
         // Kosongkan Keranjang
         $sql4 = "delete from keranjang_beli where id_user=$id_user";
@@ -141,16 +141,16 @@ if (!empty($_POST)) {
         $sql = "UPDATE beli set id_pemasok=$id_pemasok, id_user=$id_user, id_akun=$id_akun, metode_bayar='$metode_bayar', tanggal_transaksi='$tanggal_transaksi',total=$total, diubah_pada=DEFAULT where id_beli=$id_beli";
         mysqli_query($koneksi, $sql);
         pesan_transaksi($koneksi);
-        // Next Update (Menghapus Jurnal Akuntansi Terkait)
-        unposting_jurnal($koneksi,$id_akun_jurnal);
+        // // Next Update (Menghapus Jurnal Akuntansi Terkait)
+        // unposting_jurnal($koneksi,$id_akun_jurnal);
 
-        if ($total > 0) {
-            $deskripsi = "Transaksi Pembelian #" . $id_beli;
-            posting_jurnal($koneksi, $tanggal_transaksi, $deskripsi,$deskripsi, 10, $id_akun, $total); // 10 Kode Persediaan Bahan Baku
-            $id_akun_jurnal = get_id_jurnal($koneksi);
-            $sql_update_nomor_jurnal = "UPDATE beli SET total=$total,id_akun_jurnal=$id_akun_jurnal WHERE id_beli=$id_beli";
-            mysqli_query($koneksi, $sql_update_nomor_jurnal);
-        }
+        // if ($total > 0) {
+        //     $deskripsi = "Transaksi Pembelian #" . $id_beli;
+        //     posting_jurnal($koneksi, $tanggal_transaksi, $deskripsi,$deskripsi, 10, $id_akun, $total); // 10 Kode Persediaan Bahan Baku
+        //     $id_akun_jurnal = get_id_jurnal($koneksi);
+        //     $sql_update_nomor_jurnal = "UPDATE beli SET total=$total,id_akun_jurnal=$id_akun_jurnal WHERE id_beli=$id_beli";
+        //     mysqli_query($koneksi, $sql_update_nomor_jurnal);
+        // }
 
         $link = "location:../index.php?p=pembelian-edit&token=$id_beli";
         //echo $jumlah_data;
