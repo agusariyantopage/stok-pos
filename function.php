@@ -89,7 +89,7 @@ function cek_status_lunas_penjualan($koneksi, $id_jual)
     $sql2 = "SELECT * FROM jual WHERE id_jual=$id_jual";
     $query2 = mysqli_query($koneksi, $sql2);
     $data2 = mysqli_fetch_array($query2);
-    $total_tagihan = $data2['total'] - $data2['diskon'] + $data2['pajak'];
+    $total_tagihan = $data2['total'];
     $sisa = $total_tagihan - $total_bayar;
 
     if ($sisa >= 1) {

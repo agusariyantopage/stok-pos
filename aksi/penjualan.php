@@ -36,13 +36,13 @@ if (!empty($_POST)) {
         $diskon = $_POST['diskon'];
         $pajak = $_POST['ppn'];        
         $terbayar = $_POST['terbayar'];
-        if ($terbayar >= $total - $diskon + $pajak) {
+        if ($terbayar >= $total) {
             $status_bayar = "Lunas";
-            $terbayar = $total - $diskon + $pajak;
+            $terbayar = $total;
             $sisa = 0;
         } else {
             $status_bayar = "Belum Lunas";
-            $sisa = ($total - $diskon + $pajak) - $terbayar;
+            $sisa = ($total) - $terbayar;
         }
 
         $sql = "insert into jual (id_anggota, id_user, id_akun, keterangan_non_tunai, tanggal_transaksi, total, diskon, pajak, terbayar,status_bayar, dibuat_pada, diubah_pada) values($id_anggota,$id_user,$id_akun, '$keterangan_non_tunai','$tanggal_transaksi',$total,$diskon,$pajak,$terbayar,'$status_bayar',DEFAULT,DEFAULT)";
