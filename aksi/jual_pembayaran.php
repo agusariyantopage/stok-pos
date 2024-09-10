@@ -18,7 +18,7 @@ if (!empty($_POST)) {
         echo $sql_pembayaran;
         pesan_transaksi($koneksi);
         
-        posting_jurnal($koneksi, $tanggal_transaksi, $keterangan, $deskripsi, $id_akun, 84, $jumlah); // 84 Piutang Penjualan
+        // posting_jurnal($koneksi, $tanggal_transaksi, $keterangan, $deskripsi, $id_akun, 84, $jumlah); // 84 Piutang Penjualan
 
         cek_status_lunas_penjualan($koneksi,$id_jual);        
 

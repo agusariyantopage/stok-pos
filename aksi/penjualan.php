@@ -1,5 +1,4 @@
 <?php
-$BASE_URL = "http://localhost/koperasi/";
 session_start();
 include "../koneksi.php";
 include "../function.php";
